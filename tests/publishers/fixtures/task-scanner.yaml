@@ -1,0 +1,38 @@
+publishers:
+  - task-scanner:
+      healthy: 0
+      unHealthy: 1
+      thresholdLimit: low
+      pluginName: TASKS
+      defaultEncoding: UTF-8
+      canRunOnFailed: true
+      useStableBuildAsReference: true
+      useDeltaValues: true
+      thresholds:
+        unstableTotalAll: 1
+        unstableTotalHigh: 2
+        unstableTotalNormal: 3
+        unstableTotalLow: 4
+        unstableNewAll: 1
+        unstableNewHigh: 2
+        unstableNewNormal: 3
+        unstableNewLow: 4
+        failedTotalAll: 5
+        failedTotalHigh: 6
+        failedTotalNormal: 7
+        failedTotalLow: 8
+        failedNewAll: 5
+        failedNewHigh: 6
+        failedNewNormal: 7
+        failedNewLow: 8
+      shouldDetectModules: true
+      dontComputeNew: false
+      doNotResolveRelativePaths: false
+      high: 'FIXME, XXX, FIX ME'
+      normal: 'TODO, TO DO'
+      low: 'NOTE'
+      ignoreCase: true
+      asRegexp: true
+      pattern: 'src/java/**'
+      excludePattern: '**/target/**, **/*.png, **/*-gen/**, src/java/repositories/**'
+

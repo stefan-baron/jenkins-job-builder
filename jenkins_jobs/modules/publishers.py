@@ -4229,6 +4229,95 @@ def conditional_publisher(parser, xml_parent, data):
             raise JenkinsJobsException('action must be set for each condition')
 
 
+def task_scanner(parser, xml_parent, data):
+    """yaml: task-scanner
+    This plugin publishes the Task Scanner Plugin results.
+
+    Requires the Jenkins `Task Scanner Plugin.
+    <https://wiki.jenkins-ci.org/display/JENKINS/Task+Scanner+Plugin>`_
+
+    """
+    
+    if 'pluginName' not in data:
+        raise JenkinsJobsException("A plugin name must be specified.")
+    
+    p = XML.SubElement(xml_parent,
+                       'hudson.plugins.tasks.TasksPublisher')
+    XML.SubElement(p, 'healthy').text = str(
+        data.get('healthy', ''))
+    XML.SubElement(p, 'unHealthy').text = str(
+        data.get('unHealthy', ''))
+    XML.SubElement(p, 'thresholdLimit').text = str(
+        data.get('thresholdLimit', '')).lower()
+    pluginName = str(data.get('pluginName', ''))
+    XML.SubElement(p, 'pluginName').text = '[' + pluginName + ']'
+    XML.SubElement(p, 'defaultEncoding').text = str(
+        data.get('defaultEncoding', ''))
+    XML.SubElement(p, 'canRunOnFailed').text = str(
+        data.get('canRunOnFailed', False)).lower()
+    XML.SubElement(p, 'useStableBuildAsReference').text = str(
+        data.get('useStableBuildAsReference', False)).lower()
+    XML.SubElement(p, 'useDeltaValues').text = str(
+        data.get('useDeltaValues', False)).lower()
+
+    thresholds = XML.SubElement(p, 'thresholds')
+    yamlThresholds = data.get('thresholds', {})
+
+    XML.SubElement(thresholds, 'unstableTotalAll').text = str(
+        yamlThresholds.get('unstableTotalAll', ''))
+    XML.SubElement(thresholds, 'unstableTotalHigh').text = str(
+        yamlThresholds.get('unstableTotalHigh', ''))
+    XML.SubElement(thresholds, 'unstableTotalNormal').text = str(
+        yamlThresholds.get('unstableTotalNormal', ''))
+    XML.SubElement(thresholds, 'unstableTotalLow').text = str(
+        yamlThresholds.get('unstableTotalLow', ''))
+    XML.SubElement(thresholds, 'unstableNewAll').text = str(
+        yamlThresholds.get('unstableNewAll', ''))
+    XML.SubElement(thresholds, 'unstableNewHigh').text = str(
+        yamlThresholds.get('unstableNewHigh', ''))
+    XML.SubElement(thresholds, 'unstableNewNormal').text = str(
+        yamlThresholds.get('unstableNewNormal', ''))
+    XML.SubElement(thresholds, 'unstableNewLow').text = str(
+        yamlThresholds.get('unstableNewLow', ''))
+    XML.SubElement(thresholds, 'failedTotalAll').text = str(
+        yamlThresholds.get('failedTotalAll', ''))
+    XML.SubElement(thresholds, 'failedTotalHigh').text = str(
+        yamlThresholds.get('failedTotalHigh', ''))
+    XML.SubElement(thresholds, 'failedTotalNormal').text = str(
+        yamlThresholds.get('failedTotalNormal', ''))
+    XML.SubElement(thresholds, 'failedTotalLow').text = str(
+        yamlThresholds.get('failedTotalLow', ''))
+    XML.SubElement(thresholds, 'failedNewAll').text = str(
+        yamlThresholds.get('failedNewAll', ''))
+    XML.SubElement(thresholds, 'failedNewHigh').text = str(
+        yamlThresholds.get('failedNewHigh', ''))
+    XML.SubElement(thresholds, 'failedNewNormal').text = str(
+        yamlThresholds.get('failedNewNormal', ''))
+    XML.SubElement(thresholds, 'failedNewLow').text = str(
+        yamlThresholds.get('failedNewLow', ''))
+
+    XML.SubElement(p, 'shouldDetectModules').text = str(
+        data.get('shouldDetectModules', False)).lower()
+    XML.SubElement(p, 'dontComputeNew').text = str(
+        data.get('dontComputeNew', False)).lower()
+    XML.SubElement(p, 'doNotResolveRelativePaths').text = str(
+        data.get('doNotResolveRelativePaths', False)).lower()
+    XML.SubElement(p, 'high').text = str(
+        data.get('high', ''))
+    XML.SubElement(p, 'normal').text = str(
+        data.get('normal', ''))
+    XML.SubElement(p, 'low').text = str(
+        data.get('low', ''))
+    XML.SubElement(p, 'ignoreCase').text = str(
+        data.get('ignoreCase', False)).lower()
+    XML.SubElement(p, 'asRegexp').text = str(
+        data.get('asRegexp', False)).lower()
+    XML.SubElement(p, 'pattern').text = str(
+        data.get('pattern', ''))
+    XML.SubElement(p, 'excludePattern').text = str(
+        data.get('excludePattern', ''))
+
+
 class Publishers(jenkins_jobs.modules.base.Base):
     sequence = 70
 
