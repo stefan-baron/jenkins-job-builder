@@ -11,32 +11,32 @@
       <useStableBuildAsReference>true</useStableBuildAsReference>
       <useDeltaValues>true</useDeltaValues>
       <thresholds>
-        <unstableTotalAll>1</unstableTotalAll>
-        <unstableTotalHigh>2</unstableTotalHigh>
-        <unstableTotalNormal>3</unstableTotalNormal>
-        <unstableTotalLow>4</unstableTotalLow>
-        <unstableNewAll>1</unstableNewAll>
-        <unstableNewHigh>2</unstableNewHigh>
-        <unstableNewNormal>3</unstableNewNormal>
-        <unstableNewLow>4</unstableNewLow>
-        <failedTotalAll>5</failedTotalAll>
-        <failedTotalHigh>6</failedTotalHigh>
-        <failedTotalNormal>7</failedTotalNormal>
-        <failedTotalLow>8</failedTotalLow>
-        <failedNewAll>5</failedNewAll>
-        <failedNewHigh>6</failedNewHigh>
-        <failedNewNormal>7</failedNewNormal>
-        <failedNewLow>8</failedNewLow>
+        <unstableTotalAll>90</unstableTotalAll>
+        <unstableTotalHigh>80</unstableTotalHigh>
+        <unstableTotalNormal>70</unstableTotalNormal>
+        <unstableTotalLow>60</unstableTotalLow>
+        <unstableNewAll>50</unstableNewAll>
+        <unstableNewHigh>40</unstableNewHigh>
+        <unstableNewNormal>30</unstableNewNormal>
+        <unstableNewLow>20</unstableNewLow>
+        <failedTotalAll>90</failedTotalAll>
+        <failedTotalHigh>80</failedTotalHigh>
+        <failedTotalNormal>70</failedTotalNormal>
+        <failedTotalLow>60</failedTotalLow>
+        <failedNewAll>50</failedNewAll>
+        <failedNewHigh>40</failedNewHigh>
+        <failedNewNormal>30</failedNewNormal>
+        <failedNewLow>20</failedNewLow>
       </thresholds>
       <shouldDetectModules>true</shouldDetectModules>
       <dontComputeNew>false</dontComputeNew>
       <doNotResolveRelativePaths>false</doNotResolveRelativePaths>
+      <pattern>src/java/**</pattern>
       <high>FIXME, XXX, FIX ME</high>
       <normal>TODO, TO DO</normal>
       <low>NOTE</low>
       <ignoreCase>true</ignoreCase>
       <asRegexp>true</asRegexp>
-      <pattern>src/java/**</pattern>
       <excludePattern>**/target/**, **/*.png, **/*-gen/**, src/java/repositories/**</excludePattern>
     </hudson.plugins.tasks.TasksPublisher>
   </publishers>

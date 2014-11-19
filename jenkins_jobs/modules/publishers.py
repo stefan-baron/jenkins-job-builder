@@ -4236,72 +4236,73 @@ def task_scanner(parser, xml_parent, data):
     Requires the Jenkins `Task Scanner Plugin.
     <https://wiki.jenkins-ci.org/display/JENKINS/Task+Scanner+Plugin>`_
 
+    :arg int healthy: Configure health reporting threshold (optional)
+    :arg int unhealthy: Configure unhealth reporting threshol. (optional)
+    :arg str health-threshold: Threshold priority for health status
+      ('low', 'normal' or 'high', defaulted to 'low')
+    :arg str default-encoding: Character encoding.
+      If not set the system encoding will be used. (optional)
+    :arg bool can-run-on-failed: Also runs for failed builds, instead of just
+      stable or unstable builds (default false)
+    :arg bool use-stable-build-as-reference: The number of new warnings will be
+      calculated based on the last stable build, allowing reverts of unstable
+      builds where the number of warnings was decreased. (default false)
+    :arg bool use-delta-values: If set then the number of new warnings is
+      calculated by subtracting the total number of warnings of the current
+      build from the reference build.
+      (default false)
+    :arg dict thresholds: Mark build as failed or unstable if the number of
+      errors exceeds a threshold. (optional)
+
+        :thresholds:
+            * **unstable** (`dict`)
+                :unstable: * **total-all** (`int`)
+                           * **total-high** (`int`)
+                           * **total-normal** (`int`)
+                           * **total-low** (`int`)
+                           * **new-all** (`int`)
+                           * **new-high** (`int`)
+                           * **new-normal** (`int`)
+                           * **new-low** (`int`)
+
+            * **failed** (`dict`)
+                :failed: * **total-all** (`int`)
+                         * **total-high** (`int`)
+                         * **total-normal** (`int`)
+                         * **total-low** (`int`)
+                         * **new-all** (`int`)
+                         * **new-high** (`int`)
+                         * **new-normal** (`int`)
+                         * **new-low** (`int`)
+
+    :arg bool should-detect-modules: Determines if Ant or Maven modules should
+      be detected for all files that contain warnings (default false)
+    :arg bool dont-compute-new: If set to false, computes new warnings based on
+      the reference build (default true)
+    :arg bool do-not-resolve-relative-paths: (default false)
+    :arg str high: Comma separated list of
+      open point with high priority. (optional)
+    :arg str normal: Comma separated list of open
+      point with normal priority. (optional)
+    :arg str low: Comma separated list of
+      open point with low priority. (optional)
+    :arg bool ignore-case: Ignore case in open points lists (default false)
+    :arg bool as-regexp: The text in the open points lists
+      will be interpreted as a regular expression. (default false)
+    :arg str pattern: Report filename pattern (optional)
+    :arg str exclude-pattern: Exclude files from report (optional)
+
+    Example:
+
+    .. literalinclude::  /../../tests/publishers/fixtures/task-scanner.yaml
+
     """
-    
-    if 'pluginName' not in data:
-        raise JenkinsJobsException("A plugin name must be specified.")
-    
+
     p = XML.SubElement(xml_parent,
                        'hudson.plugins.tasks.TasksPublisher')
-    XML.SubElement(p, 'healthy').text = str(
-        data.get('healthy', ''))
-    XML.SubElement(p, 'unHealthy').text = str(
-        data.get('unHealthy', ''))
-    XML.SubElement(p, 'thresholdLimit').text = str(
-        data.get('thresholdLimit', '')).lower()
-    pluginName = str(data.get('pluginName', ''))
-    XML.SubElement(p, 'pluginName').text = '[' + pluginName + ']'
-    XML.SubElement(p, 'defaultEncoding').text = str(
-        data.get('defaultEncoding', ''))
-    XML.SubElement(p, 'canRunOnFailed').text = str(
-        data.get('canRunOnFailed', False)).lower()
-    XML.SubElement(p, 'useStableBuildAsReference').text = str(
-        data.get('useStableBuildAsReference', False)).lower()
-    XML.SubElement(p, 'useDeltaValues').text = str(
-        data.get('useDeltaValues', False)).lower()
 
-    thresholds = XML.SubElement(p, 'thresholds')
-    yamlThresholds = data.get('thresholds', {})
+    build_trends_publisher('[TASKS]', p, data)
 
-    XML.SubElement(thresholds, 'unstableTotalAll').text = str(
-        yamlThresholds.get('unstableTotalAll', ''))
-    XML.SubElement(thresholds, 'unstableTotalHigh').text = str(
-        yamlThresholds.get('unstableTotalHigh', ''))
-    XML.SubElement(thresholds, 'unstableTotalNormal').text = str(
-        yamlThresholds.get('unstableTotalNormal', ''))
-    XML.SubElement(thresholds, 'unstableTotalLow').text = str(
-        yamlThresholds.get('unstableTotalLow', ''))
-    XML.SubElement(thresholds, 'unstableNewAll').text = str(
-        yamlThresholds.get('unstableNewAll', ''))
-    XML.SubElement(thresholds, 'unstableNewHigh').text = str(
-        yamlThresholds.get('unstableNewHigh', ''))
-    XML.SubElement(thresholds, 'unstableNewNormal').text = str(
-        yamlThresholds.get('unstableNewNormal', ''))
-    XML.SubElement(thresholds, 'unstableNewLow').text = str(
-        yamlThresholds.get('unstableNewLow', ''))
-    XML.SubElement(thresholds, 'failedTotalAll').text = str(
-        yamlThresholds.get('failedTotalAll', ''))
-    XML.SubElement(thresholds, 'failedTotalHigh').text = str(
-        yamlThresholds.get('failedTotalHigh', ''))
-    XML.SubElement(thresholds, 'failedTotalNormal').text = str(
-        yamlThresholds.get('failedTotalNormal', ''))
-    XML.SubElement(thresholds, 'failedTotalLow').text = str(
-        yamlThresholds.get('failedTotalLow', ''))
-    XML.SubElement(thresholds, 'failedNewAll').text = str(
-        yamlThresholds.get('failedNewAll', ''))
-    XML.SubElement(thresholds, 'failedNewHigh').text = str(
-        yamlThresholds.get('failedNewHigh', ''))
-    XML.SubElement(thresholds, 'failedNewNormal').text = str(
-        yamlThresholds.get('failedNewNormal', ''))
-    XML.SubElement(thresholds, 'failedNewLow').text = str(
-        yamlThresholds.get('failedNewLow', ''))
-
-    XML.SubElement(p, 'shouldDetectModules').text = str(
-        data.get('shouldDetectModules', False)).lower()
-    XML.SubElement(p, 'dontComputeNew').text = str(
-        data.get('dontComputeNew', False)).lower()
-    XML.SubElement(p, 'doNotResolveRelativePaths').text = str(
-        data.get('doNotResolveRelativePaths', False)).lower()
     XML.SubElement(p, 'high').text = str(
         data.get('high', ''))
     XML.SubElement(p, 'normal').text = str(
@@ -4309,13 +4310,11 @@ def task_scanner(parser, xml_parent, data):
     XML.SubElement(p, 'low').text = str(
         data.get('low', ''))
     XML.SubElement(p, 'ignoreCase').text = str(
-        data.get('ignoreCase', False)).lower()
+        data.get('ignore-case', False)).lower()
     XML.SubElement(p, 'asRegexp').text = str(
-        data.get('asRegexp', False)).lower()
-    XML.SubElement(p, 'pattern').text = str(
-        data.get('pattern', ''))
+        data.get('as-regexp', False)).lower()
     XML.SubElement(p, 'excludePattern').text = str(
-        data.get('excludePattern', ''))
+        data.get('exclude-pattern', ''))
 
 
 class Publishers(jenkins_jobs.modules.base.Base):

@@ -1,38 +1,39 @@
 publishers:
   - task-scanner:
       healthy: 0
-      unHealthy: 1
-      thresholdLimit: low
-      pluginName: TASKS
-      defaultEncoding: UTF-8
-      canRunOnFailed: true
-      useStableBuildAsReference: true
-      useDeltaValues: true
+      unhealthy: 1
+      health-threshold: low
+      default-encoding: UTF-8
+      can-run-on-failed: true
+      use-stable-build-as-reference: true
+      use-delta-values: true
       thresholds:
-        unstableTotalAll: 1
-        unstableTotalHigh: 2
-        unstableTotalNormal: 3
-        unstableTotalLow: 4
-        unstableNewAll: 1
-        unstableNewHigh: 2
-        unstableNewNormal: 3
-        unstableNewLow: 4
-        failedTotalAll: 5
-        failedTotalHigh: 6
-        failedTotalNormal: 7
-        failedTotalLow: 8
-        failedNewAll: 5
-        failedNewHigh: 6
-        failedNewNormal: 7
-        failedNewLow: 8
-      shouldDetectModules: true
-      dontComputeNew: false
-      doNotResolveRelativePaths: false
+        unstable:
+            total-all: 90
+            total-high: 80
+            total-normal: 70
+            total-low: 60
+            new-all: 50
+            new-high: 40
+            new-normal: 30
+            new-low: 20
+        failed:
+            total-all: 90
+            total-high: 80
+            total-normal: 70
+            total-low: 60
+            new-all: 50
+            new-high: 40
+            new-normal: 30
+            new-low: 20
+      should-detect-modules: true
+      dont-compute-new: false
+      do-not-resolve-relative-paths: false
       high: 'FIXME, XXX, FIX ME'
       normal: 'TODO, TO DO'
       low: 'NOTE'
-      ignoreCase: true
-      asRegexp: true
+      ignore-case: true
+      as-regexp: true
       pattern: 'src/java/**'
-      excludePattern: '**/target/**, **/*.png, **/*-gen/**, src/java/repositories/**'
+      exclude-pattern: '**/target/**, **/*.png, **/*-gen/**, src/java/repositories/**'
 
