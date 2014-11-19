@@ -377,7 +377,7 @@ def trigger_builds(parser, xml_parent, data):
             XML.SubElement(tconfigs,
                            'hudson.plugins.parameterizedtrigger.'
                            'CurrentBuildParameters')
-        if project.get('git-revision', False):
+        if project_def.get('git-revision', False):
             param = XML.SubElement(tconfigs,
                                    'hudson.plugins.git.'
                                    'GitRevisionBuildParameters')
