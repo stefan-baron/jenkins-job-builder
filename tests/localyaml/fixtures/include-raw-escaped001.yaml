@@ -1,10 +1,10 @@
-- template-job:
+- job-template:
     name: test-job-include-raw-{num}
     builders:
       - shell:
-          !include-raw-escape include-raw001-hello-world.sh
+          !include-raw-escape: include-raw001-hello-world.sh
       - shell:
-          !include-raw-escape include-raw001-vars.sh
+          !include-raw-escape: include-raw001-vars.sh
 
 - project:
     name: test-job-template-1

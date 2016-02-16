@@ -6,13 +6,14 @@
         <hudson.tasks.Shell>
           <command>echo &quot;Shell execution&quot;</command>
         </hudson.tasks.Shell>
-         <hudson.tasks.Ant>
-           <targets>ant_target</targets>
-           <antName>default</antName>
-         </hudson.tasks.Ant>
+        <hudson.tasks.Ant>
+          <targets>ant_target</targets>
+          <antName>default</antName>
+        </hudson.tasks.Ant>
       </buildSteps>
       <scriptOnlyIfSuccess>true</scriptOnlyIfSuccess>
       <scriptOnlyIfFailure>false</scriptOnlyIfFailure>
+      <markBuildUnstable>false</markBuildUnstable>
     </org.jenkinsci.plugins.postbuildscript.PostBuildScript>
   </publishers>
 </project>

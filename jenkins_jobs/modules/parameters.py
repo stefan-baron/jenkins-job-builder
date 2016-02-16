@@ -36,6 +36,8 @@ Example::
 import xml.etree.ElementTree as XML
 import jenkins_jobs.modules.base
 from jenkins_jobs.errors import JenkinsJobsException
+from jenkins_jobs.errors import MissingAttributeError
+from jenkins_jobs.modules.helpers import copyartifact_build_selector
 
 
 def base_param(parser, xml_parent, data, do_default, ptype):
@@ -181,7 +183,7 @@ def node_param(parser, xml_parent, data):
 
     :arg str name: the name of the parameter
     :arg str description: a description of the parameter (optional)
-    :arg list default-nodes: The nodes used when job gets triggered
+    :arg list default-slaves: The nodes used when job gets triggered
         by anything else other than manually
     :arg list allowed-slaves: The nodes available for selection
         when job gets triggered manually. Empty means 'All'.
@@ -413,7 +415,7 @@ def dynamic_choice_param(parser, xml_parent, data):
     """yaml: dynamic-choice
     Dynamic Choice Parameter
     Requires the Jenkins :jenkins-wiki:`Jenkins Dynamic Parameter Plug-in
-    <Jenkins+Dynamic+Parameter+Plug-in>`.
+    <Dynamic+Parameter+Plug-in>`.
 
     :arg str name: the name of the parameter
     :arg str description: a description of the parameter (optional)
@@ -441,7 +443,7 @@ def dynamic_string_param(parser, xml_parent, data):
     """yaml: dynamic-string
     Dynamic Parameter
     Requires the Jenkins :jenkins-wiki:`Jenkins Dynamic Parameter Plug-in
-    <Jenkins+Dynamic+Parameter+Plug-in>`.
+    <Dynamic+Parameter+Plug-in>`.
 
     :arg str name: the name of the parameter
     :arg str description: a description of the parameter (optional)
@@ -469,7 +471,7 @@ def dynamic_choice_scriptler_param(parser, xml_parent, data):
     """yaml: dynamic-choice-scriptler
     Dynamic Choice Parameter (Scriptler)
     Requires the Jenkins :jenkins-wiki:`Jenkins Dynamic Parameter Plug-in
-    <Jenkins+Dynamic+Parameter+Plug-in>`.
+    <Dynamic+Parameter+Plug-in>`.
 
     :arg str name: the name of the parameter
     :arg str description: a description of the parameter (optional)
@@ -506,7 +508,7 @@ def dynamic_string_scriptler_param(parser, xml_parent, data):
     """yaml: dynamic-string-scriptler
     Dynamic Parameter (Scriptler)
     Requires the Jenkins :jenkins-wiki:`Jenkins Dynamic Parameter Plug-in
-    <Jenkins+Dynamic+Parameter+Plug-in>`.
+    <Dynamic+Parameter+Plug-in>`.
 
     :arg str name: the name of the parameter
     :arg str description: a description of the parameter (optional)
@@ -615,6 +617,41 @@ def matrix_combinations_param(parser, xml_parent, data):
             combination_filter
 
     return pdef
+
+
+def copyartifact_build_selector_param(parser, xml_parent, data):
+    """yaml: copyartifact-build-selector-param
+
+    Control via a build parameter, which build the copyartifact plugin should
+    copy when it is configured to use 'build-param'. Requires the Jenkins
+    :jenkins-wiki:`Copy Artifact plugin <Copy+Artifact+Plugin>`.
+
+    :arg str name: name of the build parameter to store the selection in
+    :arg str description: a description of the parameter (optional)
+    :arg str which-build: which to provide as the default value in the UI. See
+        ``which-build`` param of :py:mod:`~builders.copyartifact` from the
+        builders module for the available values as well as options available
+        that control additional behaviour for the selected value.
+
+    Example:
+
+    .. literalinclude::
+        /../../tests/parameters/fixtures/copyartifact-build-selector001.yaml
+       :language: yaml
+
+    """
+
+    t = XML.SubElement(xml_parent, 'hudson.plugins.copyartifact.'
+                       'BuildSelectorParameter')
+    try:
+        name = data['name']
+    except KeyError:
+        raise MissingAttributeError('name')
+
+    XML.SubElement(t, 'name').text = name
+    XML.SubElement(t, 'description').text = data.get('description', '')
+
+    copyartifact_build_selector(t, data, 'defaultSelector')
 
 
 class Parameters(jenkins_jobs.modules.base.Base):

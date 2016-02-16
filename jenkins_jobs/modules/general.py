@@ -21,8 +21,8 @@ Example:
 
 :Job Parameters:
     * **project-type**:
-      Defaults to "freestyle", but "maven" as well as "multijob" or "flow"
-      can also be specified.
+      Defaults to "freestyle", but "maven" as well as "multijob", "flow",
+      "workflow" or "externaljob" can also be specified.
 
     * **defaults**:
       Specifies a set of :ref:`defaults` to use for this job, defaults to
@@ -55,6 +55,10 @@ Example:
     * **workspace**:
       Path for a custom workspace. Defaults to Jenkins default
       configuration.
+
+    * **child-workspace**:
+      Path for a child custom workspace. Defaults to Jenkins default
+      configuration. This parameter is only valid for matrix type jobs.
 
     * **quiet-period**:
       Number of seconds to wait between consecutive runs of this job.
@@ -91,10 +95,15 @@ Example:
       history. It adds the ``logrotate`` attribute to the :ref:`Job`
       definition. All logrotate attributes default to "-1" (keep forever).
 
+    * **raw**:
+      If present, this section should contain a single **xml** entry. This XML
+      will be inserted at the top-level of the :ref:`Job` definition.
+
 """
 
 import xml.etree.ElementTree as XML
 import jenkins_jobs.modules.base
+from jenkins_jobs.xml_config import remove_ignorable_whitespace
 
 
 class General(jenkins_jobs.modules.base.Base):
@@ -139,6 +148,9 @@ class General(jenkins_jobs.modules.base.Base):
         if 'workspace' in data:
             XML.SubElement(xml, 'customWorkspace').text = \
                 str(data['workspace'])
+        if (xml.tag == 'matrix-project') and ('child-workspace' in data):
+            XML.SubElement(xml, 'childCustomWorkspace').text = \
+                str(data['child-workspace'])
         if 'quiet-period' in data:
             XML.SubElement(xml, 'quietPeriod').text = str(data['quiet-period'])
         node = data.get('node', None)
@@ -162,3 +174,14 @@ class General(jenkins_jobs.modules.base.Base):
             lr_adays.text = str(logrotate.get('artifactDaysToKeep', -1))
             lr_anum = XML.SubElement(lr_xml, 'artifactNumToKeep')
             lr_anum.text = str(logrotate.get('artifactNumToKeep', -1))
+
+        if 'raw' in data:
+            raw(parser, xml, data['raw'])
+
+
+def raw(parser, xml_parent, data):
+    # documented in definition.rst since includes and docs is not working well
+    # For cross cutting method like this
+    root = XML.fromstring(data.get('xml'))
+    remove_ignorable_whitespace(root)
+    xml_parent.append(root)

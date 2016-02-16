@@ -7,9 +7,10 @@
         which-build: last-successful
         optional: true
         flatten: true
+        do-not-fingerprint: true
         parameter-filters: PUBLISH=true
 
 - job:
     name: test-job-1
     builders:
-      !include exception_include001.yaml.inc
+        !include: exception_include001.yaml.inc
